@@ -107,7 +107,18 @@ const GET_ALL_EYECATCHERS = gql`
     }
 `;
 
-
+const INSERT_EYECATCHER = gql`
+  mutation insert_Eyecatchers($created: date = "", $name: String = "", $note: String = "") {
+    insert_Eyecatchers(objects: {created: $created, name: $name, note: $note}) {
+      returning {
+        created
+        name
+        note
+      }
+      affected_rows
+    }
+  }
+`;
 
 export const M_Q = {
     GET_RACE_RESULTS, 
@@ -115,5 +126,6 @@ export const M_Q = {
     GET_ALL_TRACKS_INFO,
     GET_TRAINER_LOCATION,
     GET_ALL_TRAINER_LOCATIONS,
-    GET_ALL_EYECATCHERS
+    GET_ALL_EYECATCHERS,
+    INSERT_EYECATCHER
 };
