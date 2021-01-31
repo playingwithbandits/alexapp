@@ -2,7 +2,7 @@
 import gql from "graphql-tag";
 
 const GET_RACE_RESULTS = gql`
-  query GET_RACE_RESULTS(){
+  query GET_RACE_RESULTS {
     ResultsInfo(limit: 10, order_by: {r_date: desc}) {
       r_requirements
       r_place
@@ -43,8 +43,8 @@ const GET_TRACK_INFO = gql`
   }
 `;
 const GET_ALL_TRACKS_INFO = gql`
-  query GET_ALL_TRACKS_INFO(){
-    TrackInformation {
+  query GET_ALL_TRACKS_INFO {
+    TrackInformation(order_by: {name: "asc"}){
         abbr
         d5
         d6
@@ -79,8 +79,8 @@ const GET_TRAINER_LOCATION = gql`
 
 
 const GET_ALL_TRAINER_LOCATIONS = gql`
-  query GET_ALL_TRAINER_LOCATIONS(){
-    TrainerLocations {
+  query GET_ALL_TRAINER_LOCATIONS {
+    TrainerLocations(order_by: {name: asc}){
         county
         latitude
         longitude
@@ -90,10 +90,30 @@ const GET_ALL_TRAINER_LOCATIONS = gql`
   }
 `;
 
+const GET_ALL_EYECATCHERS = gql`
+  query GET_ALL_EYECATCHERS {
+    Eyecatchers(order_by: {created: desc}) {
+      created
+      name
+      note
+    }
+    Eyecatchers_aggregate {
+      aggregate {
+        max {
+          created
+        }
+      }
+    }
+    }
+`;
+
+
+
 export const M_Q = {
     GET_RACE_RESULTS, 
     GET_TRACK_INFO, 
     GET_ALL_TRACKS_INFO,
     GET_TRAINER_LOCATION,
     GET_ALL_TRAINER_LOCATIONS,
+    GET_ALL_EYECATCHERS
 };

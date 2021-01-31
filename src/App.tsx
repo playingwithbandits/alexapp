@@ -4,10 +4,11 @@ import './App.css';
 import Provider from './provider';
 
 import {Text} from "rebass";
+import { Eyecatchers } from './components/Eyecatchers';
 
 
 const App: React.FC = () => (
-    <Text>sfdsdf</Text>
+    <Eyecatchers/>
 );
 
 export default App;
