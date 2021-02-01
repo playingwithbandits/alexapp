@@ -92,10 +92,11 @@ const GET_ALL_TRAINER_LOCATIONS = gql`
 
 const GET_ALL_EYECATCHERS = gql`
   query GET_ALL_EYECATCHERS {
-    Eyecatchers(order_by: {created: desc}) {
+    Eyecatchers(limit: 10, order_by: {created: desc}) {
       created
       name
       note
+      row_id
     }
     Eyecatchers_aggregate {
       aggregate {
@@ -108,14 +109,25 @@ const GET_ALL_EYECATCHERS = gql`
 `;
 
 const INSERT_EYECATCHER = gql`
-  mutation insert_Eyecatchers($created: date = "", $name: String = "", $note: String = "") {
+  mutation insert_Eyecatchers($created: date = "1900-01-01", $name: String = "", $note: String = "") {
     insert_Eyecatchers(objects: {created: $created, name: $name, note: $note}) {
       returning {
         created
         name
         note
+        row_id
       }
       affected_rows
+    }
+  }
+`;
+
+const DELETE_EYECATCHER = gql`
+  mutation delete_Eyecatchers($row_id: Int) {
+    delete_Eyecatchers(where: {row_id: {_eq: $row_id}}) {
+      returning {
+        name
+      }
     }
   }
 `;
@@ -127,5 +139,6 @@ export const M_Q = {
     GET_TRAINER_LOCATION,
     GET_ALL_TRAINER_LOCATIONS,
     GET_ALL_EYECATCHERS,
-    INSERT_EYECATCHER
+    INSERT_EYECATCHER,
+    DELETE_EYECATCHER
 };

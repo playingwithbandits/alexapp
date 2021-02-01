@@ -27,5 +27,5 @@ export const GET_DAYS_BETWEEN_INC = (d1:string, d2:string) => {
             stopDateLoop = true;
         }
     }
-    return listOfDates; 
+    return listOfDates as string[]; 
 }
