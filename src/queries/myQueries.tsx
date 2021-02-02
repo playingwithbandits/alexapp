@@ -1,9 +1,10 @@
 
 import gql from "graphql-tag";
 
-const GET_RACE_RESULTS = gql`
-  query GET_RACE_RESULTS {
+const GET_ALL_RESULTS = gql`
+  query GET_ALL_RESULTS {
     ResultsInfo(limit: 10, order_by: {r_date: desc}) {
+      row_id
       r_requirements
       r_place
       r_id
@@ -16,6 +17,13 @@ const GET_RACE_RESULTS = gql`
       h_lostdist
       h_link
       h_id
+    }
+    ResultsInfo_aggregate {
+      aggregate {
+        max {
+          r_date
+        }
+      }
     }
   }
 `;
@@ -132,8 +140,32 @@ const DELETE_EYECATCHER = gql`
   }
 `;
 
+
+const INSERT_RESULT = gql`
+mutation insert_ResultsInfo($r_requirements: String = "", $r_place: String = "", $r_id: String = "", $r_distancef: Int = 0, $r_date: String = "", $r_code: String = "", $h_pos: String = "", $h_or: Int = 0, $h_name: String = "", $h_lostdist: float8 = "", $h_link: String = "", $h_id: String = "") {
+  insert_ResultsInfo(objects: {r_requirements: $r_requirements, r_place: $r_place, r_id: $r_id, r_distancef: $r_distancef, r_date: $r_date, r_code: $r_code, h_pos: $h_pos, h_or: $h_or, h_name: $h_name, h_lostdist: $h_lostdist, h_link: $h_link, h_id: $h_id}) {
+    returning {
+      r_requirements
+      r_place
+      r_id
+      r_distancef
+      r_date
+      r_code
+      h_pos
+      h_or
+      h_name
+      h_lostdist
+      h_link
+      h_id
+      row_id
+    }
+  }
+}
+
+`;
+
 export const M_Q = {
-    GET_RACE_RESULTS, 
+    GET_ALL_RESULTS, 
     GET_TRACK_INFO, 
     GET_ALL_TRACKS_INFO,
     GET_TRAINER_LOCATION,
