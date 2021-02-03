@@ -1,14 +1,20 @@
 export const p_I = (x:any) => {
+    if(x == null){
+        return 0;
+    }
     let o = parseInt(x);
     if (isNaN(o)) {
-        return null;
+        return 0;
     }
     return o;
   };
   export const p_F = (x:any) => {
+    if(x == null){
+        return 0;
+    }
     let o = parseFloat(x);
     if (isNaN(o)) {
-      return null;
+      return 0;
     }
     return o;
   }
@@ -102,13 +108,63 @@ export const queryNodeAttr = (x : HTMLDivElement, y : string) => {
 // export const sortJSONBy2Keys = (a :any,b :any,c :any,desc :any) => {let d=(b,c)=>b>c?1:b<c?-1:0;if(desc){return a.sort((a,e) => {let f=a[b],g=e[b],h=a[c],i=e[c];return d([d(g,f),d(i,h)],[d(f,g),d(h,i)])})}else{return a.sort((a,e) => {let f=a[b],g=e[b],h=a[c],i=e[c];return d([d(f,g),d(h,i)],[d(g,f),d(i,h)])})}};
 // export const arrayToSet = (a :any,b :any,c :any) => {let set_a=[...new Set(a.map(x=>x[b]))];return set_a.map(y=>{let temp={};temp[b]=y;temp[c]=a.filter(c=>c[b]===y);return temp})};
 export const applySentenceCase = (str :any) => {return(str)?str.replace(/\w\S*/g,(txt: string)=>txt.charAt(0).toUpperCase()+txt.substr(1).toLowerCase()):""};
-// export const textToFurlong = (input :any) => {let output=null;let td_v_parts=input.split("m");let td_v_split=td_v_parts.map((x: string)=>x.split("f"));if(td_v_split.length==1){output=(p_I(td_v_split[0][0]))}if(td_v_split.length==2){output=(p_I(td_v_split[0][0])*8);if(td_v_split[1].length==2){output+=(p_I(td_v_split[1][0]))}}return output};
+export const textToFurlong = (input :any) => {
+    let output=null;
+    if(input){
+        let td_v_parts:string[]=input.split("m");
+        let td_v_split:string[][]=td_v_parts.map((x: string)=>x.split("f"));
+        if(td_v_split !== null){
+            if(td_v_split.length==1){
+                output=(p_I(td_v_split[0][0]))
+            }
+            if(td_v_split.length==2){
+                output=(p_I(td_v_split[0][0])*8);
+                if(td_v_split[1].length==2){
+                    output+=(p_I(td_v_split[1][0]))
+                }
+            }
+        }
+    }
+    return output
+};
+export const distanceToWinnerStrToFloat = (code: string) => {
+    let result = 0;
+    if(code && code != "undefined" && code != "null"){
+        code = ""+code;
+        let evalStr = code.replace("snse", "+0.05").replace("nse", "+0.1").replace("shd", "+0.2").replace("shd", "+0.2").replace("snk", "+0.25").replace("hd", "+0.25").replace("nk", "+0.3").replace("½", "+0.5").replace("⅓", "+0.33").replace("⅔", "+0.66").replace("¼", "+0.25").replace("¾", "+0.75").replace("⅕", "+0.20").replace("⅖", "+0.40").replace("⅗", "+0.60").replace("⅘", "+0.80").replace("L","").replace("dht","+0");        
+        let evaled = null;
+        try {
+            evaled = eval(evalStr)
+        } catch (e) {
+            console.log(e, evalStr)
+        }
+        result = p_F(evaled);
+    }
+    return result;
+};
+
 // export const avgFromObj = (arr :any,key :any,amount :any) => {let tempAvg=0;for(let i=0;i<amount;i++){tempAvg=(arr.reduce(((s,c)=>(a: any,x: { [x: string]: string | number; })=>(x[key]!=null&&x[key]>=tempAvg)?(s+=+x[key])/++c:a)(0,0),0))}
 // return tempAvg.toFixed(2)};
 export const isGoodDraw = (draw :any,max_draw :any,drawBias :any) => {let drawGood=!0;if(max_draw>5){let avg_draw=max_draw/2;let lower_bound_draw=avg_draw/2;let higher_bound_draw=avg_draw+(avg_draw/2);switch(drawBias){case "low":drawGood=(draw<=avg_draw);break;case "high":drawGood=(draw>=avg_draw);break;case "not-middle":drawGood=((draw<=lower_bound_draw)||(draw>=higher_bound_draw));break;case "not stall 1":drawGood=(draw!=1);break;case "not1&Low":drawGood=(draw<=avg_draw)&&(draw!=1);break}}
 return drawGood};
 export const horseNameToKey = (horse_name :any) => {
-        let input = (horse_name).trim();
-        let output = (input).toLowerCase().replace(/[(]*nap[)]*$/gi, "").replace(/'/gi, "").trim();
-        return output;
-    };
+    let input = (horse_name).trim();
+    let output = (input).toLowerCase().replace(/[(]*nap[)]*$/gi, "").replace(/'/gi, "").trim();
+    return output;
+};
+export const placeToPlaceKey = (m_place :any) => {
+    let place_out = m_place;
+    if(m_place){
+        place_out = (m_place).toLowerCase().trim().replace("(aw)", "-aw").replace("-city", "").replace(/\s+/g, '-').trim();
+    }
+    return place_out
+};
+
+export const trackOkay = (track :any, meetingMappings :any) => {
+    let findablePlace = placeToPlaceKey(track);
+
+    let foundObj = meetingMappings.filter((x:any) => !(["ireland","dubai","france"].includes(x["location"].toLowerCase()))).find((x:any) => placeToPlaceKey(x["namelower"]) === findablePlace);
+
+    return foundObj;
+};
+

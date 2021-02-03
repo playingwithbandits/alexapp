@@ -1,14 +1,19 @@
 import { FetchResult, MutationFunctionOptions, MutationResult, useMutation, useQuery } from "@apollo/client";
 import { IconButton } from "@material-ui/core";
+import { Flag, Visibility } from "@material-ui/icons";
 
 import React, { useEffect, useState, useMemo } from "react";
-import { Box, Button, Flex, Text } from "rebass";
+import { Box, Button, Flex, Heading, Text } from "rebass";
 import { GET_CURRENT_DATE,GET_YESTERDAY_DATE, GET_DIFF_DAYS_STRS, GET_DAYS_BETWEEN_INC, GET_PAGE_DIV, queryNodeAll, queryNode, queryNodeText } from "../../Helpers/HelperFunc";
 import { M_Q } from "../../queries/myQueries";
 import { Loading } from "../Loading";
 import { Table } from "../Table";
+import { UpdateTablePanel } from "../UpdateTablePanel";
 
-export interface EyecatchersProps {}
+export interface EyecatchersProps {
+  globalDisabledButton: boolean;
+  setGlobalDisabledButton: (update: boolean | ((prevState: boolean) => boolean)) => void;
+}
 
 interface Eyecatcher{
   created: string;
@@ -16,22 +21,28 @@ interface Eyecatcher{
   note: string;
 }
 
+interface Eyecatchers_insert_input{
+  created: string;
+  name: string;
+  note: string;
+}
+
 export const Eyecatchers: React.FC<EyecatchersProps> = (props) => {
   
-  const {data, loading, error } = useQuery(M_Q.GET_ALL_EYECATCHERS, {});
+  const {data, loading, error } = useQuery(M_Q.GET_LAST_EYECATCHERS_DATE, {});
   const [insertEyecatcher] = useMutation(M_Q.INSERT_EYECATCHER); 
-  const [deleteEyecatcher] = useMutation(M_Q.DELETE_EYECATCHER); 
 
-  const eyecatchers = data?.Eyecatchers;
   const lastUpdate = data?.Eyecatchers_aggregate?.aggregate?.max?.created;
   const yesterday = GET_YESTERDAY_DATE();
   const listOfDates =  GET_DAYS_BETWEEN_INC(yesterday, lastUpdate);
-  const diffDays = GET_DIFF_DAYS_STRS(yesterday, lastUpdate);
-
 
   const getDay = async (dateStr: string) => {
     console.log(dateStr);
     try {
+      
+          props.setGlobalDisabledButton(false);
+
+          let objects:Eyecatchers_insert_input[] = [];
 
           let rp_page = "https://www.racingpost.com/results/" +  dateStr;
           const rp_day_node: HTMLDivElement = await GET_PAGE_DIV(rp_page);
@@ -43,103 +54,33 @@ export const Eyecatchers: React.FC<EyecatchersProps> = (props) => {
               let eye = queryNodeText(queryNode(meeting, '[data-test-selector="link-eyecatcherName"]'));
               let eyeText = queryNodeText(queryNode(meeting, '[data-test-selector="text-eyecatcherNotes"]'));
               if(star != "-" && star != "") {
-                  console.log({name: star, created: dateStr, note: starText});
-                  await insertEyecatcher({
-                    variables: {name: star, created: dateStr, note: starText},
-                    refetchQueries: [{query: M_Q.GET_ALL_EYECATCHERS}],
-                  });
+                  objects.push({name: star, created: dateStr, note: starText});
               }
               if(eye != "-" && eye != "") {
-                  console.log({name: eye, created: dateStr, note: eyeText});
-                  await insertEyecatcher({
-                    variables: {name: eye, created: dateStr, note: eyeText},
-                    refetchQueries: [{query: M_Q.GET_ALL_EYECATCHERS}],
-                  });
+                  objects.push({name: eye, created: dateStr, note: eyeText});
               }
           })
-
+          
+          await insertEyecatcher({
+            variables: {objects: objects},
+            refetchQueries: [{query: M_Q.GET_LAST_EYECATCHERS_DATE}],
+          });
 
     } catch (err) {
       console.log(err);
+    } finally {
+      props.setGlobalDisabledButton(true);
     }
   };
 
   const updateClick = async () => {
       listOfDates?.map(getDay);
   }
-
-
-  const deleteEC = (rowId: number) => {
-    console.log(rowId);
-    deleteEyecatcher({
-      variables: {row_id: rowId},
-      refetchQueries: [{query: M_Q.GET_ALL_EYECATCHERS}],
-    });
-  }
-  
-    
-  const columnsForTable = [
-    {
-      name: "Name",
-      selector: "name",
-      sortable: true,
-      grow:2,
-      wrap: true
-    },
-    {
-      name: "Note",
-      selector: "note",
-      sortable: true,
-      grow:2,
-      wrap: true
-    },
-    {
-      name: "Created",
-      selector: "created",
-      sortable: true,
-      right: true,
-      wrap: true
-    },
-    // {
-    //   cell: (row: any) => (
-    //     <IconButton
-    //       aria-label="delete"
-    //       color="secondary"
-    //       onClick={() => deleteEC(row.row_id)}
-    //     >  
-    //       Delete
-    //     </IconButton>
-    //   )
-    // }
-  ];
   
   return <>
-    <Flex>
-      {loading ? 
-        <Loading/> : (
-          <Flex>
-            <Box>
-              {lastUpdate ? (
-                <Box>
-                  <Text>Last records: {lastUpdate} ({diffDays} days)</Text>
-                  {(lastUpdate != yesterday) && 
-                    <IconButton 
-                      aria-label="delete"
-                      color="primary" 
-                      onClick={updateClick}>
-                        Update
-                    </IconButton>
-                  }
-                </Box>
-              ) :  null}
-              
-            </Box>
-            <Table data={eyecatchers} columns={columnsForTable} defaultSortField="created" stickyHeader></Table>
-            
-          </Flex>
-          
-        )}
-    </Flex>
+
+    <UpdateTablePanel loading={loading} title={"Eyecatchers"} lastUpdate={lastUpdate} yesterday={yesterday} onClick={updateClick} globalDisabledButton={props.globalDisabledButton}/>
+
   </>
   
 };

@@ -1,0 +1,1 @@
+export { UpdateTablePanel } from './UpdateTablePanel'
