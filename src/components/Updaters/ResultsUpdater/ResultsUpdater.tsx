@@ -3,13 +3,13 @@ import { IconButton } from "@material-ui/core";
 import { Flag } from "@material-ui/icons";
 import React, { useState } from "react";
 import { Box, Button, Flex, Heading, Text } from "rebass";
-import { distanceToWinnerStrToFloat, getAllRaces, GET_DAYS_BETWEEN_INC, GET_DIFF_DAYS_STRS, GET_YESTERDAY_DATE, p_I, queryNode, queryNodeAll, queryNodeAttr, queryNodeHref, queryNodeText, queryNodeTextNoEdits, textToFurlong, trackOkay } from "../../Helpers/HelperFunc";
-import { M_Q } from "../../queries/myQueries";
-import { Loading } from "../Loading";
-import { Table } from "../Table";
-import { UpdateTablePanel } from "../UpdateTablePanel";
+import { distanceToWinnerStrToFloat, getAllRaces, GET_DAYS_BETWEEN_INC, GET_DIFF_DAYS_STRS, GET_YESTERDAY_DATE, p_I, queryNode, queryNodeAll, queryNodeAttr, queryNodeHref, queryNodeText, queryNodeTextNoEdits, textToFurlong, trackOkay } from "../../../Helpers/HelperFunc";
+import { M_Q } from "../../../queries/myQueries";
+import { Loading } from "../../Loading";
+import { Table } from "../../Table";
+import { UpdateTablePanel } from "../../UpdateTablePanel";
 
-export interface ResultsProps {
+export interface ResultsUpdaterProps {
   globalDisabledButton: boolean;
   setGlobalDisabledButton: (update: boolean | ((prevState: boolean) => boolean)) => void;
 }
@@ -30,7 +30,7 @@ interface ResultsInfo_insert_input {
   r_requirements: String;
 }
 
-export const Results: React.FC<ResultsProps> = (props) => {
+export const ResultsUpdater: React.FC<ResultsUpdaterProps> = (props) => {
   const res1 = useQuery(M_Q.GET_ALL_RESULTS, {});
   const res2 = useQuery(M_Q.GET_ALL_TRACKS_INFO, {});
 

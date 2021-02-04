@@ -4,13 +4,13 @@ import './App.css';
 import Provider from './provider';
 
 import {Box, Flex, Text} from "rebass";
-import { Home } from './components/page/Home';
+import { UpdatersContainer } from './components/Updaters/UpdatersContainer';
 
 
 const App: React.FC = () => (
     <Flex flexDirection={["column","row"]}>
         <Box>
-            <Home />
+            <UpdatersContainer />
         </Box>
     </Flex>
 );

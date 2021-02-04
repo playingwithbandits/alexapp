@@ -1,6 +1,46 @@
 
 import gql from "graphql-tag";
 
+const GET_RACES_FOR_MEETING = gql`
+  query GET_RACES_FOR_MEETING($in: [String!] = "") {
+    dayraces_aggregate(where: {id: {_in: $in}}) {
+      aggregate {
+        count(distinct: false)
+      }
+    }
+    dayraces(where: {id: {_in: $in}}) {
+      winnings
+      title
+      time
+      rating
+      link
+      id
+      horseids
+      going
+      distancef
+      distance
+      description
+      class
+    }
+  }
+`;
+
+const GET_MEETINGS_FOR_DATE = gql`
+  query GET_MEETINGS_FOR_DATE($date: date = "") {
+    dayplaces(where: {date: {_eq: $date}}) {
+      date
+      id
+      place
+      races
+    }
+    dayplaces_aggregate(where: {date: {_eq: $date}}) {
+      aggregate {
+        count(distinct: false)
+      }
+    }
+  }
+`;
+
 const GET_ALL_RESULTS = gql`
   query GET_ALL_RESULTS {
     ResultsInfo(limit: 10, order_by: {r_date: desc}) {
@@ -132,50 +172,37 @@ const GET_LAST_EYECATCHERS_DATE = gql`
 const INSERT_EYECATCHER = gql`
   mutation insert_Eyecatchers($objects: [Eyecatchers_insert_input!]!) {
     insert_Eyecatchers(objects: $objects) {
-      returning {
-        created
-        name
-        note
-        row_id
-      }
       affected_rows
     }
-  }
-`;
+  }`;
 
 const DELETE_EYECATCHER = gql`
   mutation delete_Eyecatchers($row_id: Int) {
     delete_Eyecatchers(where: {row_id: {_eq: $row_id}}) {
-      returning {
-        name
-      }
+      affected_rows
     }
-  }
-`;
-
+  }`;
 
 const INSERT_RESULT = gql`
-mutation insert_ResultsInfo($objects: [ResultsInfo_insert_input!]!) {
-  insert_ResultsInfo(objects: $objects) {
-    returning {
-      r_requirements
-      r_place
-      r_id
-      r_distancef
-      r_date
-      r_code
-      h_pos
-      h_or
-      h_name
-      h_lostdist
-      h_link
-      h_id
-      row_id
+  mutation insert_ResultsInfo($objects: [ResultsInfo_insert_input!]!) {
+    insert_ResultsInfo(objects: $objects) {
+      affected_rows
     }
-  }
-}
+  }`;
 
-`;
+const INSERT_MEETING = gql`
+  mutation insert_dayplaces($objects: [dayplaces_insert_input!]!) {
+    insert_dayplaces(objects: $objects) {
+      affected_rows
+    }
+  }`;
+
+const INSERT_RACE = gql`
+  mutation insert_dayraces($objects: [dayraces_insert_input!]!) {
+    insert_dayraces(objects: $objects) {
+      affected_rows
+    }
+  }`;
 
 export const M_Q = {
     GET_ALL_RESULTS, 
@@ -187,5 +214,9 @@ export const M_Q = {
     GET_LAST_EYECATCHERS_DATE,
     INSERT_EYECATCHER,
     DELETE_EYECATCHER,
-    INSERT_RESULT
+    INSERT_RESULT,
+    GET_MEETINGS_FOR_DATE,
+    GET_RACES_FOR_MEETING,
+    INSERT_MEETING,
+    INSERT_RACE
 };

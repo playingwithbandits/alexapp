@@ -34,6 +34,14 @@ export const GET_YESTERDAY_DATE = () => {
     return yesterdayStr;
 }
 
+export const GET_TOMORROW_DATE = () => {
+    let today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() + 1)
+    let yesterdayStr = yesterday.toISOString().split('T')[0];
+    return yesterdayStr;
+}
+
 export const GET_DIFF_DAYS_STRS = (d1:string, d2:string) => {
     const date1 = new Date(d1).getTime();
     const date2 = new Date(d2).getTime();
@@ -106,7 +114,17 @@ export const queryNodeAttr = (x : HTMLDivElement, y : string) => {
 };
 // export const timeToDecimal = (t :any) => {let arr = t.split(':');let dec = p_I((arr[1] / 6) * 10, 10); return p_F(p_I(arr[0], 10) + '.' + (dec < 10 ? '0' : '') + dec);};
 // export const sortJSONBy2Keys = (a :any,b :any,c :any,desc :any) => {let d=(b,c)=>b>c?1:b<c?-1:0;if(desc){return a.sort((a,e) => {let f=a[b],g=e[b],h=a[c],i=e[c];return d([d(g,f),d(i,h)],[d(f,g),d(h,i)])})}else{return a.sort((a,e) => {let f=a[b],g=e[b],h=a[c],i=e[c];return d([d(f,g),d(h,i)],[d(g,f),d(i,h)])})}};
-// export const arrayToSet = (a :any,b :any,c :any) => {let set_a=[...new Set(a.map(x=>x[b]))];return set_a.map(y=>{let temp={};temp[b]=y;temp[c]=a.filter(c=>c[b]===y);return temp})};
+export const arrayToSet = (a :any,b :any,c :any) => {
+    let arrOfb = a.map((x:any)=>x[b]);
+    let set_pre:Set<any> = new Set(arrOfb);
+    let set_a:any[] = Array.from(set_pre);
+    return set_a.map(y=>{
+        let temp:any={};
+        temp[b]=y;
+        temp[c]=a.filter((c:any)=>c[b]===y);
+        return temp
+    })
+};
 export const applySentenceCase = (str :any) => {return(str)?str.replace(/\w\S*/g,(txt: string)=>txt.charAt(0).toUpperCase()+txt.substr(1).toLowerCase()):""};
 export const textToFurlong = (input :any) => {
     let output=null;
