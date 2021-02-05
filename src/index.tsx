@@ -6,9 +6,11 @@ import {
   InMemoryCache,
   HttpLink
 } from '@apollo/client'
+import { Router, Redirect} from "react-router-dom";
  
 import App from "./App";
 import Provider from "./provider";
+import { createBrowserHistory } from 'history'
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
@@ -17,10 +19,15 @@ const apolloClient = new ApolloClient({
   }),
 });
 
+const hist = createBrowserHistory();
+
 const container = (
   <ApolloProvider client={apolloClient}>
     <Provider>
-        <App />
+        <Router history={hist}>
+          <App />
+          <Redirect from="/" to="/today" />
+        </Router>
     </Provider>
   </ApolloProvider>
 );

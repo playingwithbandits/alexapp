@@ -168,6 +168,34 @@ const GET_LAST_EYECATCHERS_DATE = gql`
     }
 `;
 
+const GET_RACE_DETAILS = gql`
+  query GET_RACE_DETAILS($id: String = "") {
+    dayraces(where: {id: {_eq: $id}}) {
+      winnings
+      title
+      time
+      rating
+      link
+      id
+      going
+      distancef
+      distance
+      description
+      date
+      class
+    }
+  }
+`;
+
+const GET_RACETIME_FOR_ID = gql`
+  query GET_RACETIME_FOR_ID($id: String = "") {
+    dayraces(where: {id: {_eq: $id}}) {
+      time
+    }
+  }
+`;
+
+
 
 const INSERT_EYECATCHER = gql`
   mutation insert_Eyecatchers($objects: [Eyecatchers_insert_input!]!) {
@@ -218,5 +246,7 @@ export const M_Q = {
     GET_MEETINGS_FOR_DATE,
     GET_RACES_FOR_MEETING,
     INSERT_MEETING,
-    INSERT_RACE
+    INSERT_RACE,
+    GET_RACE_DETAILS,
+    GET_RACETIME_FOR_ID
 };
