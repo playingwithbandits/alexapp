@@ -49,15 +49,15 @@ export const UpdateTablePanel: React.FC<UpdateTablePanelProps> = (props) => {
           
             {(props.count !== undefined) && (p_I(props.count) < 1) &&
               <CardActions disableSpacing>
-                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" disabled={!props.globalDisabledButton}>
+                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" disabled={props.globalDisabledButton}>
                     <Update/>
                 </Button>
               </CardActions>
             }
             {(props.lastUpdate !== undefined && props.yesterday !== undefined) && (props.lastUpdate != props.yesterday) && 
               <CardActions disableSpacing>
-                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" disabled={!props.globalDisabledButton}>
-                    <Update/>
+                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" disabled={props.globalDisabledButton}>
+                    <Update/> 
                 </Button>
               </CardActions>
             }

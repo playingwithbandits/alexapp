@@ -130,6 +130,13 @@ interface dayhorseshistory_insert_input{
   ts: number
 }
 
+interface trainer_collection {
+  [key: string]: string | undefined
+}
+interface rider_collection {
+  [key: string]: string | undefined
+}
+
 export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
   const currentDate = props.date || GET_CURRENT_DATE();
   const res1 = useQuery(M_Q.GET_MEETINGS_FOR_DATE, {variables: { date: currentDate }})
@@ -164,6 +171,12 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
       let race_objects:dayraces_insert_input[] = [];
       let horse_objects:dayhorses_insert_input[] = [];
       let horse_history_objects:dayhorseshistory_insert_input[] = [];
+
+      let trainer_divs_collection:trainer_collection = {};
+      let rider_divs_collection:rider_collection = {};
+      
+      
+
       const rp_day_obj = await GET_PAGE_DIV(rp_picks_url);
       let rp_day_node = rp_day_obj.page_div;
 
@@ -278,8 +291,18 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
               }
               
               
-              let h_rider_link_obj = await  GET_PAGE_DIV(h_rider_link);
-              let h_rider_link_obj_str = h_rider_link_obj.page_div_str;
+              let h_rider_link_obj_stored = rider_divs_collection[h_rider_link];
+
+              let h_rider_link_obj = {page_div_str: ""};
+              let h_rider_link_obj_str = "";
+              if(h_rider_link_obj_stored){
+                h_rider_link_obj_str = h_rider_link_obj_stored;
+              }else{
+                h_rider_link_obj = await GET_PAGE_DIV(h_rider_link);
+                h_rider_link_obj_str = h_rider_link_obj.page_div_str;
+                rider_divs_collection[h_rider_link] = h_rider_link_obj_str;
+              }
+
               let h_rider_link_obj_str_preloaded =  getPreloadedState(h_rider_link_obj_str);
               
               let h_rider_good_runs = 0;
@@ -321,8 +344,19 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
               let h_rider_good_runs_top_trainer = h_rider_good_runs_top_trainer_arr.join(",");
               let h_rider_good_runs_top_track = h_rider_good_runs_top_track_arr.join(",");
               
-              let h_trainer_link_obj = await  GET_PAGE_DIV(h_trainer_link);
-              let h_trainer_link_obj_str = h_trainer_link_obj.page_div_str;
+
+              let h_trainer_link_obj_stored = trainer_divs_collection[h_trainer_link];
+
+              let h_trainer_link_obj = {page_div_str: ""};
+              let h_trainer_link_obj_str = "";
+              if(h_trainer_link_obj_stored){
+                h_trainer_link_obj_str = h_trainer_link_obj_stored;
+              }else{
+                h_trainer_link_obj = await GET_PAGE_DIV(h_trainer_link);
+                h_trainer_link_obj_str = h_trainer_link_obj.page_div_str;
+                trainer_divs_collection[h_trainer_link] = h_trainer_link_obj_str;
+              }
+              
               let h_trainer_link_obj_str_preloaded =  getPreloadedState(h_trainer_link_obj_str);
               
               let h_trainer_running_to_form = null;
@@ -496,7 +530,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
                       let row_pos = hist_obj.raceOutcomeCode;
                         
                       if(!p_I(hist_obj.raceOutcomeCode)){
-                          console.log(hist_obj.raceOutcomeCode);
+                        //console.log(hist_obj.raceOutcomeCode);
                       }
                       //if(row_pos){
                           
@@ -757,16 +791,14 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
         });
       }
       
-
-      
-
-      
-
+      console.log(trainer_divs_collection);
+      console.log(rider_divs_collection);
 
     } catch (err) {
       console.log(err);
     } finally {
       props.setGlobalDisabledButton(true);
+      
     }
   };
   
