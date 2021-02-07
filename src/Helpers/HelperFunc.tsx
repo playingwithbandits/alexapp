@@ -69,6 +69,16 @@ export const GET_DAYS_BETWEEN_INC = (d1:string, d2:string) => {
     return listOfDates as string[]; 
 }
 
+export const getJSONFromPHP = async (page_url:string) => {
+    let json_res = []
+    try{
+        json_res = await(fetch(page_url)).then(x => x.json());
+    } catch (err) {
+        console.log(err);
+    } finally {
+        return {page_url, json_res};
+    }
+}
 export const GET_P_URL = (page_url:string) => {
     return "/phps/getP.php?q=" + encodeURIComponent(page_url);
 }
@@ -186,3 +196,120 @@ export const trackOkay = (track :any, meetingMappings :any) => {
     return foundObj;
 };
 
+export const dateGood = (dateStr :any, currentDate:any) => {
+    let hisDate = rpHisDateToRealDate(dateStr);
+        
+    let todayDateStr = realDateToRpHisDate(currentDate);
+    
+    let firstJune = new Date("2019 01 01");
+
+    return hisDate && (hisDate >= firstJune) && (dateStr != todayDateStr);
+
+};
+
+export const rpHisDateToRealDate = (dateStr :any) => {
+    
+    let date = null;
+    
+    if(dateStr.length == 7){
+        let day = dateStr.substring(0, 2);
+        let month = dateStr.substring(2, 5);
+        let year = "20" + dateStr.substring(5, 7);
+        date = new Date(day + " " + month + " " + year);
+    }
+   
+    return date;     
+};
+
+export const realDateToRpHisDate = (dateS :any) => {
+    let dateStr = null;
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    let dateObj = new Date(dateS);
+    let month = monthNames[dateObj.getMonth()];
+    let day = String(dateObj.getDate()).padStart(2, '0');
+    let year = dateObj.getFullYear();
+    let output = day  + ''+ month  + '' + year.toString().slice(2,4);
+    return output;  
+};
+
+export const distanceTodistanceFloat = (code :any) => {
+    let result = 0;
+    
+    if(code && code != "undefined" && code != "null"){
+        code = ""+code;
+
+        let evalStr = code.replace("½", "+0.5").replace("⅓", "+0.33").replace("⅔", "+0.66").replace("¼", "+0.25").replace("¾", "+0.75").replace("⅕", "+0.20").replace("⅖", "+0.40").replace("⅗", "+0.60").replace("⅘", "+0.80").replace("F","").replace("f","");
+
+        let evaled = null;
+        try {
+            evaled = eval(evalStr)
+        } catch (e) {
+            console.log(e, evalStr)
+        }
+        
+        result = p_F(evaled);
+    }
+    return result;
+};
+
+export const getPreloadedState = (str :any) => {
+    let matchedStr = null;
+    let startStr = "window.PRELOADED_STATE = ";
+    let endStr = ";\n    })();";
+    let start = str.indexOf(startStr);
+    if(start > 0){
+        let newStr = str.slice(start + startStr.length, str.length);
+        let end = newStr.indexOf(endStr);
+        matchedStr = newStr.slice(0, end);
+
+        matchedStr = JSON.parse(matchedStr);
+    }
+    return matchedStr;
+}
+
+
+export const isGoodPosFunc = (pos:any, out:any, dist:any, furlong:any) => {
+
+    let position = p_I(pos);
+    let outof = p_I(out);
+    let lostDistance = distanceToWinnerStrToFloat(dist);
+    let furlongs = distanceTodistanceFloat(furlong);
+    
+    
+    if(position == 1){
+        return true;
+    }   
+    
+    if(position == 0){
+        return false;
+    }
+        
+    let race_distanceLost_good_amount = 12;
+    if(furlongs <= 24) {
+        race_distanceLost_good_amount = 10;
+    }
+    if(furlongs <= 20) {
+        race_distanceLost_good_amount = 8;
+    }
+    if(furlongs <= 16) {
+        race_distanceLost_good_amount = 7;
+    }
+    if(furlongs <= 14) {
+        race_distanceLost_good_amount = 6;
+    }
+    if(furlongs <= 12) {
+        race_distanceLost_good_amount = 5;
+    }
+    if(furlongs <= 8) {
+        race_distanceLost_good_amount = 4;
+    }
+    if(furlongs <= 6) {
+        race_distanceLost_good_amount = 3;
+    }
+
+    let lostDistanceCheck = (lostDistance <= (race_distanceLost_good_amount));
+
+    return (lostDistanceCheck);
+}

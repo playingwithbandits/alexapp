@@ -195,7 +195,14 @@ const GET_RACETIME_FOR_ID = gql`
   }
 `;
 
-
+const GET_HORSE_HISTORY_DATA_CHECK = gql`
+  query GET_HORSE_HISTORY_DATA_CHECK {
+    dayhorseshistory {
+      horseid
+      date
+    }
+  }
+`;
 
 const INSERT_EYECATCHER = gql`
   mutation insert_Eyecatchers($objects: [Eyecatchers_insert_input!]!) {
@@ -232,6 +239,21 @@ const INSERT_RACE = gql`
     }
   }`;
 
+  
+const INSERT_HORSE = gql`
+mutation insert_dayhorses($objects: [dayhorses_insert_input!]!) {
+  insert_dayhorses(objects: $objects) {
+    affected_rows
+  }
+}`;
+
+const INSERT_HORSE_HISTORY = gql`
+mutation insert_dayhorseshistory($objects: [dayhorseshistory_insert_input!]!) {
+  insert_dayhorseshistory(objects: $objects) {
+    affected_rows
+  }
+}`;
+
 export const M_Q = {
     GET_ALL_RESULTS, 
     GET_TRACK_INFO, 
@@ -240,6 +262,7 @@ export const M_Q = {
     GET_ALL_TRAINER_LOCATIONS,
     GET_ALL_EYECATCHERS,
     GET_LAST_EYECATCHERS_DATE,
+    GET_HORSE_HISTORY_DATA_CHECK,
     INSERT_EYECATCHER,
     DELETE_EYECATCHER,
     INSERT_RESULT,
@@ -248,5 +271,7 @@ export const M_Q = {
     INSERT_MEETING,
     INSERT_RACE,
     GET_RACE_DETAILS,
-    GET_RACETIME_FOR_ID
+    GET_RACETIME_FOR_ID,
+    INSERT_HORSE,
+    INSERT_HORSE_HISTORY
 };
