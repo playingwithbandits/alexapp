@@ -1,4 +1,4 @@
-import { Icon, SvgIconTypeMap } from "@material-ui/core";
+import { CardActions, CardContent, CardHeader, Icon, SvgIconTypeMap, Typography } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { Update, Flag, Visibility, Event } from "@material-ui/icons";
 import React from "react";
@@ -31,32 +31,41 @@ export const UpdateTablePanel: React.FC<UpdateTablePanelProps> = (props) => {
   }
 
   return <>
-  <Flex width="100%">
     {props.loading ? 
-      <Loading/> : (
-      <Flex flexDirection={["column","row"]} mb={1}  width="100%">
-        <Box mr={"auto"} p={[2,20]} width="100%">
-          <Heading><Icon component={icon}/>{props.title}</Heading>
-          {(props.lastUpdate !== undefined) && <Text>Last: {props.lastUpdate} {(p_I(diffDays) > 0) && <Text as="span">({diffDays})</Text>}</Text>}
-          {(props.count !== undefined) && <Text>Meetings: {props.count}</Text>}
-        </Box> 
-        <Box p={[2,20]}>
-          {(props.count !== undefined) && (p_I(props.count) < 1) && props.globalDisabledButton &&
-            <Button sx={{cursor:"pointer"}} onClick={props.onClick} width={["100%","auto"]}>
-                <Update/>
-            </Button>
-          }
 
-          {(props.lastUpdate !== undefined && props.yesterday !== undefined) && (props.lastUpdate != props.yesterday) && props.globalDisabledButton &&
-            <Button sx={{cursor:"pointer"}} onClick={props.onClick} width={["100%","auto"]}>
-                <Update/>
-            </Button>
-          }
-
-        </Box>
-      </Flex>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h2">
+            <Loading/>
+          </Typography>
+        </CardContent> : (
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h2">
+            {props.title}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {(props.lastUpdate !== undefined) && <Text>Last Scraped: {props.lastUpdate} {(p_I(diffDays) > 0) && <Text as="span">({diffDays})</Text>}</Text>}
+            {(props.count !== undefined) && <Text>Meetings count: {props.count}</Text>}
+          </Typography>
+          
+            {(props.count !== undefined) && (p_I(props.count) < 1) && props.globalDisabledButton &&
+              <CardActions disableSpacing>
+                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small">
+                    <Update/>
+                </Button>
+              </CardActions>
+            }
+            {(props.lastUpdate !== undefined && props.yesterday !== undefined) && (props.lastUpdate != props.yesterday) && props.globalDisabledButton &&
+              <CardActions disableSpacing>
+                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" >
+                    <Update/>
+                </Button>
+              </CardActions>
+            }
+            
+          
+        </CardContent>
+        
       )}
-  </Flex>
 
 </>;
 };

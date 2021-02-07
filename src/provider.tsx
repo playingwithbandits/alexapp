@@ -4,7 +4,7 @@ import { mainTheme } from "././assets/styling/mainTheme";
 
 const Provider:React.FC = (props) =>
 <ThemeProvider theme={mainTheme}>
-{props.children}
+    {props.children}
 </ThemeProvider>
 
 export default Provider;

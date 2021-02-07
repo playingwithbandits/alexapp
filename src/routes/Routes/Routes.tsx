@@ -6,13 +6,13 @@ import { Today } from "../../pages/Today";
 import { Tomorrow } from "../../pages/Tomorrow";
 
 export const routes = [
-  {
-    path: "/home",
-    name: "Home",
-    icon: "nc-icon nc-diamond",
-    component: Home,
-    layout: "",
-  },
+  // {
+  //   path: "/home",
+  //   name: "Home",
+  //   icon: "nc-icon nc-diamond",
+  //   component: Home,
+  //   layout: "",
+  // },
   {
     path: "/today",
     name: "Today",
@@ -41,11 +41,11 @@ export const routes = [
     component: UpdateTables,
     layout: "",
   },
-  {
-    path: "/weights",
-    name: "Weights",
-    icon: "nc-icon nc-pin-3",
-    component: WeightsTables,
-    layout: "",
-  }
+  // {
+  //   path: "/weights",
+  //   name: "Weights",
+  //   icon: "nc-icon nc-pin-3",
+  //   component: WeightsTables,
+  //   layout: "",
+  // }
 ];

@@ -7,19 +7,26 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Meeting } from '../Meeting/Meeting';
 
+
+const isMobile = true;
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: isMobile ? 'calc(100vw - 164px)' : 'calc(100vw)',
+    padding:0
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(22),
     flexBasis: '33.33%',
     flexShrink: 0,
   },
   secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(22),
     color: theme.palette.text.secondary,
   },
+  removeBottomPadding: {
+      padding: "0px"
+  }
 }));
 
 export interface MeetingAccordionProps {
@@ -46,9 +53,9 @@ export const MeetingAccordion: React.FC<MeetingAccordionProps> = (props) => {
             aria-controls={"panel1bh-content" + meeting.id}
             id={"panel1bh-header" + meeting.id}
           >
-            <Typography className={classes.heading}>{meeting.place}</Typography>
+            <Typography className={classes.heading} component="h2">{meeting.place}</Typography>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.removeBottomPadding}>
             <Meeting data={meeting} />
           </AccordionDetails>
         </Accordion>
