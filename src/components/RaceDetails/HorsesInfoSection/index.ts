@@ -1,0 +1,1 @@
+export { HorsesInfoSection } from './HorsesInfoSection'

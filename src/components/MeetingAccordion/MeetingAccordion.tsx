@@ -6,18 +6,18 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Meeting } from '../Meeting/Meeting';
+import { Box } from 'rebass';
 
 
 const isMobile = true;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: isMobile ? 'calc(100vw - 164px)' : 'calc(100vw)',
+    width: isMobile ? 'calc(100vw - 164px)' : 'calc(100vw - 50px)',
     padding:0
   },
   heading: {
     fontSize: theme.typography.pxToRem(22),
-    flexBasis: '33.33%',
     flexShrink: 0,
   },
   secondaryHeading: {
@@ -41,9 +41,11 @@ export const MeetingAccordion: React.FC<MeetingAccordionProps> = (props) => {
     setExpanded(isExpanded ? panel : "");
   };
 
+
+
   console.log(props.data);
   return (
-    <div className={classes.root}>
+    <Box className={classes.root} width={['calc(100vw - 50px)','calc(100vw - 164px)']}>
 
       {props.data?.map((meeting: any) => (
       
@@ -60,7 +62,7 @@ export const MeetingAccordion: React.FC<MeetingAccordionProps> = (props) => {
           </AccordionDetails>
         </Accordion>
       ))} 
-    </div>
+    </Box>
   );
 }
 

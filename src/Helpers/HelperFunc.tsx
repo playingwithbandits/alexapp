@@ -85,13 +85,14 @@ export const GET_P_URL = (page_url:string) => {
 
 export const GET_PAGE_DIV = async (page_url:string) => {
     let page_div = document.createElement("div");
+    let page_div_str = "";
     try {
-        const page_div_str = await fetch(GET_P_URL(page_url)).then(x => x.text());
+        page_div_str = await fetch(GET_P_URL(page_url)).then(x => x.text());
         page_div.innerHTML = page_div_str;
     } catch (err) {
         console.log(err);
     } finally {
-        return page_div;
+        return ({page_div, page_div_str});
     }
 }
 
@@ -106,7 +107,8 @@ export const queryNodeHref = (x : any) => ((x || {"attributes": {"href": {"value
 export const getAllRaces = async (urlArr: string[]) => {
     let results: HTMLDivElement[] = [];
     try {
-        results = await Promise.all(urlArr.map(x => GET_PAGE_DIV(x)));                
+        let results_objs = await Promise.all(urlArr.map(x => GET_PAGE_DIV(x)));
+        results = results_objs.map((x:any)=> x.page_div);                
     } catch (err) {
         console.log(err);
     } finally {

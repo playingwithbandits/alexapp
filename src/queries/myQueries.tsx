@@ -66,8 +66,111 @@ const GET_ALL_RESULTS = gql`
       }
     }
   }
-`;
 
+`;
+const GET_HORSES_IN_RACE_DATA = gql`
+  query GET_HORSES_IN_RACE_DATA($raceid: String, $_in: [String!] = []) {
+    dayhorses(where: {raceid: {_eq: $raceid}}) {
+      weight
+      ts
+      trainerrtf
+      trainer_recent_wins
+      trainer_recent_runs
+      trainer_recent_perc
+      trainer
+      tips
+      stable_tour_quotes
+      sire_avg_win_dist
+      sire_avg_flat_win_dist
+      sire
+      silks
+      sex_code
+      rpr
+      riderallowance
+      rider
+      raceid
+      profilelink
+      previous_trainers_info
+      previous_trainers_amount
+      previous_owners_info
+      previous_owners_amount
+      owner
+      or
+      number
+      name
+      lastrun
+      jockey_recent_wins
+      jockey_recent_runs
+      jockey_recent_perc
+      id
+      headgear
+      h_trainer_total_prize_money
+      h_trainer_running_to_form
+      h_trainer_link
+      h_trainer_good_runs_top_track
+      h_trainer_good_runs_top_rider
+      h_trainer_good_runs
+      h_trainer_blind_stake
+      h_rider_total_prize_money
+      h_rider_link
+      h_rider_good_runs_top_trainer
+      h_rider_good_runs_top_track
+      h_rider_good_runs
+      h_rider_blind_stake
+      h_ltrecords_rs_or
+      h_ltrecords_nhf_or
+      h_ltrecords_h_or
+      h_ltrecords_f_or
+      h_ltrecords_c_or
+      h_ltrecords_aw_or
+      gelded
+      form
+      draw
+      dob
+      dam_sire_avg_win_dist
+      dam_sire_avg_flat_win_dist
+      dam
+      comment
+      colour_code
+      claim
+      breeder
+      age
+    }
+    dayhorseshistory(where: {horseid: {_in: $_in}}) {
+      horseid
+      date
+      ts
+      tatics
+      rpr
+      rider
+      racetype
+      prize
+      position
+      place
+      outof
+      or
+      lostdist
+      hisraceid
+      headgear
+      going
+      furlongs
+      draw
+      direction
+      course
+      comment
+      class
+      claim
+    }
+    dayhorses_aggregate(where: {raceid: {_eq: $raceid}}) {
+      aggregate {
+        avg {
+          or
+        }
+      }
+    }
+  }
+
+`;
 
 const GET_TRACK_INFO = gql`
   query GET_TRACK_INFO($ground: string = "", $abbr: string = ""){
@@ -273,5 +376,6 @@ export const M_Q = {
     GET_RACE_DETAILS,
     GET_RACETIME_FOR_ID,
     INSERT_HORSE,
-    INSERT_HORSE_HISTORY
+    INSERT_HORSE_HISTORY,
+    GET_HORSES_IN_RACE_DATA
 };

@@ -45,7 +45,8 @@ export const EyecatchersUpdater: React.FC<EyecatchersUpdaterProps> = (props) => 
           let objects:Eyecatchers_insert_input[] = [];
 
           let rp_page = "https://www.racingpost.com/results/" +  dateStr;
-          const rp_day_node: HTMLDivElement = await GET_PAGE_DIV(rp_page);
+          const rp_day_get = await GET_PAGE_DIV(rp_page);
+          const rp_day_node: HTMLDivElement = rp_day_get.page_div;
           let allMeetings: HTMLDivElement[] = queryNodeAll(rp_day_node, '.rp-raceCourse__panel__details__content');
 
           allMeetings.forEach(async (meeting: HTMLDivElement) => {

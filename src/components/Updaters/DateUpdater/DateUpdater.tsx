@@ -148,7 +148,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
 
   const amount = meeting_data?.dayplaces_aggregate?.aggregate?.count;
   const tracks_info = tracks_data?.TrackInformation;
-  const currentHorsesHistoryInfo = h_history_data?.TrackInformation;
+  const currentHorsesHistoryInfo = h_history_data?.dayhorseshistory;
 
   
 
@@ -165,7 +165,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
       let horse_objects:dayhorses_insert_input[] = [];
       let horse_history_objects:dayhorseshistory_insert_input[] = [];
       const rp_day_obj = await GET_PAGE_DIV(rp_picks_url);
-      let rp_day_node = rp_day_obj;
+      let rp_day_node = rp_day_obj.page_div;
 
       let day_races_nodes = queryNodeAll(rp_day_node, '[data-test-selector="RC-courseCards__raceRow"] a');
         
@@ -205,7 +205,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
           let raceId = race.raceId;
 
           let race_obj = await GET_PAGE_DIV(raceUrl);
-          let race_node = race_obj;
+          let race_node = race_obj.page_div;
           
           let r_prize = queryNodeText(queryNode(race_node, '[data-test-selector="RC-headerBox__winner"] .RC-headerBox__infoRow__content'));
           let distance = queryNodeText(queryNode(race_node, '[data-test-selector="RC-header__raceDistanceRound"]')).replace(/\s/g, '');
@@ -279,7 +279,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
               
               
               let h_rider_link_obj = await  GET_PAGE_DIV(h_rider_link);
-              let h_rider_link_obj_str = h_rider_link_obj;
+              let h_rider_link_obj_str = h_rider_link_obj.page_div_str;
               let h_rider_link_obj_str_preloaded =  getPreloadedState(h_rider_link_obj_str);
               
               let h_rider_good_runs = 0;
@@ -322,7 +322,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
               let h_rider_good_runs_top_track = h_rider_good_runs_top_track_arr.join(",");
               
               let h_trainer_link_obj = await  GET_PAGE_DIV(h_trainer_link);
-              let h_trainer_link_obj_str = h_trainer_link_obj;
+              let h_trainer_link_obj_str = h_trainer_link_obj.page_div_str;
               let h_trainer_link_obj_str_preloaded =  getPreloadedState(h_trainer_link_obj_str);
               
               let h_trainer_running_to_form = null;
@@ -371,7 +371,7 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
               
               let h_form_default_link = h_profileLink.split("#")[0] + "/form";
               let h_form_default_obj = await  GET_PAGE_DIV(h_form_default_link);
-              let h_form_default_obj_str = h_form_default_obj;
+              let h_form_default_obj_str = h_form_default_obj.page_div_str;
               
               let h_form_default_obj_str_preloaded =  getPreloadedState(h_form_default_obj_str);
               
@@ -485,8 +485,8 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
                   let hist_obj = h_form_arr[key];
                   let hdate =  realDateToRpHisDate(hist_obj.raceDatetime);
                   let horseid = id;
-                  
-                  let alreadyInTableCheck = currentHorsesHistoryInfo.filter((x:any) => x.horseid == horseid && x.date == hdate);
+
+                  let alreadyInTableCheck = (currentHorsesHistoryInfo != undefined) ? currentHorsesHistoryInfo.filter((x:any) => x.horseid == horseid && x.date == hdate) : [];
                   let dateOkayCheck =  dateGood(hdate, currentDate);
                   
                   if(alreadyInTableCheck.length || !dateOkayCheck){
@@ -719,42 +719,49 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
         }
 
       }
-      console.log(race_objects);
-      console.log(meeting_objects);
-      console.log(horse_objects);
-      console.log(horse_history_objects);
-
-
-      await insertRace({
-        variables: {objects: race_objects},
-        refetchQueries: [{
-          query: M_Q.GET_MEETINGS_FOR_DATE,
-          variables: { date: currentDate }
-        }]
-      });
-      await insertMeeting({
-        variables: {objects: meeting_objects},
-        refetchQueries: [{
-          query: M_Q.GET_MEETINGS_FOR_DATE,
-          variables: { date: currentDate }
-        }]
-      });
+      let size = 200;
+      while (race_objects.length > 0){
+        await insertRace({
+          variables: {objects: race_objects.splice(0, size)},
+          refetchQueries: [{
+            query: M_Q.GET_MEETINGS_FOR_DATE,
+            variables: { date: currentDate }
+          }]
+        });
+      }
+      while (meeting_objects.length > 0){
+        await insertMeeting({
+          variables: {objects: meeting_objects.splice(0, size)},
+          refetchQueries: [{
+            query: M_Q.GET_MEETINGS_FOR_DATE,
+            variables: { date: currentDate }
+          }]
+        });
+      }
+      while (horse_objects.length > 0){
+        await insertHorse({
+          variables: {objects: horse_objects.splice(0, size)},
+          refetchQueries: [{
+            query: M_Q.GET_MEETINGS_FOR_DATE,
+            variables: { date: currentDate }
+          }]
+        });
+      }
+      while (horse_history_objects.length > 0){
+        await insertHorseHistory({
+          variables: {objects: horse_history_objects.splice(0, size)},
+          refetchQueries: [{
+            query: M_Q.GET_MEETINGS_FOR_DATE,
+            variables: { date: currentDate }
+          }]
+        });
+      }
       
-      await insertHorse({
-        variables: {objects: horse_objects},
-        refetchQueries: [{
-          query: M_Q.GET_MEETINGS_FOR_DATE,
-          variables: { date: currentDate }
-        }]
-      });
+
       
-      await insertHorseHistory({
-        variables: {objects: horse_history_objects},
-        refetchQueries: [{
-          query: M_Q.GET_MEETINGS_FOR_DATE,
-          variables: { date: currentDate }
-        }]
-      });
+
+      
+
 
     } catch (err) {
       console.log(err);
