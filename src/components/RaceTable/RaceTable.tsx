@@ -20,6 +20,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { Box, Flex, Text } from "rebass";
 
 export interface RaceTableProps {
   data: any[];
@@ -65,14 +66,17 @@ function stableSort(array: any[], comparator: { (a: any, b: any): number; (arg0:
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%"
+    "& .MuiTableCell-root": {
+      borderLeft: "1px solid rgba(224, 224, 224, 1)"
+    }
   },
   paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2)
+    width:"auto",
+    maxWidth:"100%"
   },
   table: {
-    minWidth: 750
+    width:"auto",
+    maxWidth:"100%"
   },
   visuallyHidden: {
     border: 0,
@@ -84,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1
+  },
+  tablecell:{
+    padding: "0px 5px",
   }
 }));
 
@@ -101,21 +108,13 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={"default"}
             sortDirection={orderBy === headCell.id ? order : undefined}
+            className={classes.tablecell}
+            style={{maxWidth: headCell.width ? headCell.width : "70px", width: headCell.width ? headCell.width : "70px"}}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
+            <Box onClick={createSortHandler(headCell.id)} sx={{userSelect:"none", cursor:"pointer"}}>
+              <Text title={headCell.label} fontSize={"10px"} fontWeight="bold">{headCell.label}</Text>
+            </Box>
           </TableCell>
         ))}
       </TableRow>
@@ -129,7 +128,7 @@ export const RaceTable: React.FC<RaceTableProps> = (props) => {
   
   const classes = useStyles();
   const [order, setOrder] = useState<'asc' | 'desc'>("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [orderBy, setOrderBy] = useState("draw");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
@@ -168,7 +167,7 @@ export const RaceTable: React.FC<RaceTableProps> = (props) => {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
+    <Box className={classes.root}>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -198,7 +197,15 @@ export const RaceTable: React.FC<RaceTableProps> = (props) => {
                       key={row.name}
                     >
                       {props.columns.map((col) => 
-                        <TableCell align={col.numeric ? 'right': 'left'}>{row[col.id]}</TableCell>
+                        <TableCell align={col.numeric ? 'right': 'left'} 
+                        className={classes.tablecell} style={{maxWidth: col.width ? col.width : "70px", width: col.width ? col.width : "70px"}}>
+                          <Flex sx={{whiteSpace: "nowrap",overflowX: "hidden"}}>
+                            {col.returnFunc ? 
+                                col.returnFunc(row)
+                            : <Text title={row[col.id]} fontSize={14} width="100%">{row[col.id]}</Text>
+                            }
+                          </Flex>
+                        </TableCell>
                       )}
                     </TableRow>
                   );
@@ -207,7 +214,7 @@ export const RaceTable: React.FC<RaceTableProps> = (props) => {
           </Table>
         </TableContainer>
       </Paper>
-    </div>
+    </Box>
   );
 };
 

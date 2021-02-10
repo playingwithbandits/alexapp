@@ -47,20 +47,22 @@ export const UpdateTablePanel: React.FC<UpdateTablePanelProps> = (props) => {
             {(props.count !== undefined) && <Text>Meetings count: {props.count}</Text>}
           </Typography>
           
-            {(props.count !== undefined) && (p_I(props.count) < 1) &&
+            {(props.count !== undefined) && (p_I(props.count) < 1) && props.globalDisabledButton &&
               <CardActions disableSpacing>
-                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" disabled={props.globalDisabledButton}>
+                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small">
                     <Update/>
                 </Button>
               </CardActions>
             }
-            {(props.lastUpdate !== undefined && props.yesterday !== undefined) && (props.lastUpdate != props.yesterday) && 
+            {(props.lastUpdate !== undefined && props.yesterday !== undefined) && (props.lastUpdate != props.yesterday) && props.globalDisabledButton &&
               <CardActions disableSpacing>
-                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" disabled={props.globalDisabledButton}>
-                    <Update/> 
+                <Button sx={{cursor:"pointer"}} onClick={props.onClick} size="small" >
+                    <Update/>
                 </Button>
               </CardActions>
             }
+            {!props.globalDisabledButton && <Text>@</Text>}
+
 
         </CardContent>
         

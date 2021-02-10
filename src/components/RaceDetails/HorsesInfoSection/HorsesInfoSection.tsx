@@ -1,5 +1,6 @@
+import { makeStyles } from "@material-ui/core";
 import React from "react";
-import { Text } from "rebass";
+import { Image, Text, Link } from "rebass";
 import { RaceTable } from "../../RaceTable";
 
 export interface HorsesInfoSectionProps {
@@ -98,57 +99,90 @@ interface dayhorsehistory{
 }
 
 
-let horseCols = [
-  {
-    id: "name",
-    numeric: false,
-    label: "Name"
+
+// { id: "h_ltrecords_aw_or", numeric: true,  width:"40px", label: "h_ltrecords_aw_or" },
+// { id: "h_ltrecords_c_or", numeric: true,  width:"40px", label: "h_ltrecords_c_or" },
+// { id: "h_ltrecords_f_or", numeric: true,  width:"40px", label: "h_ltrecords_f_or" },
+// { id: "h_ltrecords_h_or", numeric: true,  width:"40px", label: "h_ltrecords_h_or" },
+// { id: "h_ltrecords_nhf_or", numeric: true,  width:"40px", label: "h_ltrecords_nhf_or" },
+// { id: "h_ltrecords_rs_or", numeric: true,  width:"40px", label: "h_ltrecords_rs_or" },
+// { id: "h_rider_blind_stake", numeric: true,  width:"40px", label: "h_rider_blind_stake" },
+// { id: "h_rider_good_runs", numeric: true,  width:"40px", label: "h_rider_good_runs" },
+// { id: "h_rider_good_runs_top_track", numeric: false, label: "h_rider_good_runs_top_track",
+// width: "100px" },
+// { id: "h_rider_good_runs_top_trainer", numeric: false, label: "h_rider_good_runs_top_trainer" },
+// { id: "h_rider_total_prize_money", numeric: true,  width:"40px", label: "h_rider_total_prize_money" },
+// { id: "h_trainer_blind_stake", numeric: true,  width:"40px", label: "h_trainer_blind_stake" },
+// { id: "h_trainer_good_runs", numeric: true,  width:"40px", label: "h_trainer_good_runs" },
+// { id: "h_trainer_good_runs_top_rider", numeric: false, label: "h_trainer_good_runs_top_rider" },
+// { id: "h_trainer_good_runs_top_track", numeric: false, label: "h_trainer_good_runs_top_track" },
+// { id: "h_trainer_running_to_form", numeric: true,  width:"40px", label: "h_trainer_running_to_form" },
+// { id: "h_trainer_total_prize_money", numeric: true,  width:"40px", label: "h_trainer_total_prize_money" },
+// { id: "jockey_recent_perc", numeric: true,  width:"40px", label: "jockey_recent_perc"  },
+// { id: "jockey_recent_runs", numeric: true,  width:"40px", label: "jockey_recent_runs" },
+// { id: "jockey_recent_wins", numeric: true,  width:"40px", label: "jockey_recent_wins" },
+// { id: "riderallowance", numeric: true,  width:"40px", label: "riderallowance" },
+// { id: "trainer_recent_perc", numeric: true,  width:"40px", label: "t_r_%" },
+// { id: "trainer_recent_runs", numeric: true,  width:"40px", label: "t_r_r" },
+// { id: "trainer_recent_wins", numeric: true,  width:"40px", label: "t_r_w" },
+// { id: "trainerrtf", numeric: true,  width:"40px", label: "trainerrtf" },
+// { id: "weight", numeric: true,  width:"40px", label: "weight" },
+
+const useStyles = makeStyles((theme) => ({
+  nav: {
+    color: "rgba(0, 0, 0, 0.87)",
+    textDecoration: "none"
   },
-  { id: "draw", numeric: true, label: "Draw" },
-  { id: "number", numeric: true, label: "Number" },
-  { id: "age", numeric: true, label: "age" },
-  { id: "form", numeric: false, label: "form" },
-  { id: "number", numeric: true, label: "Number" },
-  { id: "headgear", numeric: false, label: "headgear" },
-  { id: "h_ltrecords_aw_or", numeric: true, label: "headgear" },
-  { id: "h_ltrecords_c_or", numeric: true, label: "headgear" },
-  { id: "h_ltrecords_f_or", numeric: true, label: "headgear" },
-  { id: "h_ltrecords_h_or", numeric: true, label: "headgear" },
-  { id: "h_ltrecords_nhf_or", numeric: true, label: "headgear" },
-  { id: "h_ltrecords_rs_or", numeric: true, label: "headgear" },
-  { id: "h_rider_blind_stake", numeric: true, label: "headgear" },
-  { id: "h_rider_good_runs", numeric: true, label: "headgear" },
-  { id: "h_rider_good_runs_top_track", numeric: false, label: "headgear" },
-  { id: "h_rider_good_runs_top_trainer", numeric: false, label: "headgear" },
-  { id: "h_rider_total_prize_money", numeric: true, label: "headgear" },
-  { id: "h_trainer_blind_stake", numeric: true, label: "headgear" },
-  { id: "h_trainer_good_runs", numeric: true, label: "headgear" },
-  { id: "h_trainer_good_runs_top_rider", numeric: false, label: "headgear" },
-  { id: "h_trainer_good_runs_top_track", numeric: false, label: "headgear" },
-  { id: "h_trainer_running_to_form", numeric: true, label: "headgear" },
-  { id: "h_trainer_total_prize_money", numeric: true, label: "headgear" },
-  { id: "jockey_recent_perc", numeric: true, label: "headgear"  },
-  { id: "jockey_recent_runs", numeric: true, label: "headgear" },
-  { id: "jockey_recent_wins", numeric: true, label: "headgear" },
-  { id: "lastrun", numeric: true, label: "headgear" },
-  { id: "name", numeric: false, label: "headgear" },
-  { id: "rider", numeric: false, label: "headgear" },
-  { id: "riderallowance", numeric: true, label: "headgear" },
-  { id: "rpr", numeric: true, label: "headgear" },
-  { id: "trainer", numeric: false, label: "headgear" },
-  { id: "trainer_recent_perc", numeric: true, label: "headgear" },
-  { id: "trainer_recent_runs", numeric: true, label: "headgear" },
-  { id: "trainer_recent_wins", numeric: true, label: "headgear" },
-  { id: "trainerrtf", numeric: true, label: "headgear" },
-  { id: "ts", numeric: true, label: "headgear" },
-  { id: "weight", numeric: true, label: "headgear" },
-]
+}));
 
 export const HorsesInfoSection: React.FC<HorsesInfoSectionProps> = (props) => {
   let horses: dayhorse[] = props.horses?.dayhorses;
   let history: dayhorsehistory[] = props.horses?.dayhorseshistory;
 
-  console.log(horses);
+  
+
+  const classes = useStyles();
+
+  let horseCols = [
+    { 
+      id: "silks", 
+      numeric: false,
+      width: "30px", 
+      label: "", 
+      returnFunc: (row: any) => {
+        return <Image size={20} src={row.silks}/>
+      }
+    },
+    { 
+      id: "name", 
+      numeric: false,
+      width: "120px", 
+      label: "Name", 
+      returnFunc: (row: any) => {
+        console.log(row);
+        return <Link className={classes.nav} href={row.profilelink} title={row.name} target="_blank">{row.name}</Link>
+      }
+    },
+    { id: "draw", numeric: true, width:"40px", label: "Draw"}, 
+    { id: "or", numeric: true,  width:"40px", label: "or" },
+    { id: "rpr", numeric: true,  width:"40px", label: "rpr" },
+    { id: "ts", numeric: true,  width:"40px", label: "ts" },
+    { id: "rider", numeric: false, width: "120px", label: "Jock", 
+      returnFunc: (row: any) => {
+        return <Link className={classes.nav} href={row.h_rider_link} title={row.rider} target="_blank">{row.rider}</Link>
+      } 
+    },
+    { id: "trainer", numeric: false, width: "120px", label: "Train", 
+      returnFunc: (row: any) => {
+        return <Link className={classes.nav} href={row.h_trainer_link} title={row.trainer} target="_blank">{row.trainer}</Link>
+      }
+    },
+    { id: "lastrun", numeric: true,  width:"40px", label: "Last" },
+    { id: "age", numeric: true, width:"40px", label: "Age"},
+    { id: "headgear", numeric: false, label: "Head" },
+    { id: "form", numeric: false, label: "Form" },
+  ]
+
   return <>
 
       <RaceTable data={horses} columns={horseCols}/>

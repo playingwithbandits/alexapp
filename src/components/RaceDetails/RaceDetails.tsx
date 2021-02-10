@@ -33,18 +33,23 @@ export const RaceDetails: React.FC<RaceDetailsProps> = (props) => {
   ] = [res2];
 
   return <>
-    <Flex width="100%">
+    <Box width="100%">
       {race_loading ? 
         <Loading/> : (
           
-        <Flex>
+        <Box>
               {race_obj ? (
                 <Box>
-                  <RaceInfoSection race_obj={race_obj}/>
-                  {horses_loading ? 
-                  <Loading/> : (
-                    <HorsesInfoSection horses={horses_data}/>
-                  )}
+                  <Box width={"100%"}>
+                    <RaceInfoSection race_obj={race_obj}/>
+                  </Box>
+                  <Box width={"100%"}>
+                    {horses_loading ? 
+                    <Loading/> : (
+                      <HorsesInfoSection horses={horses_data}/>
+                    )}
+                  </Box>
+                  
                 </Box>
               ) : 
                 <Box>
@@ -52,8 +57,8 @@ export const RaceDetails: React.FC<RaceDetailsProps> = (props) => {
                 </Box>
                 
               }
-        </Flex>
+        </Box>
         )}
-    </Flex>
+    </Box>
   </>;;
 };
