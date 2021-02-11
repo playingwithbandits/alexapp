@@ -144,7 +144,7 @@ export const ResultsUpdater: React.FC<ResultsUpdaterProps> = (props) => {
   
         }
       }
-      console.log(objects);
+      
       await insertResult({
         variables: {objects: objects},
         refetchQueries: [{query: M_Q.GET_ALL_RESULTS}],

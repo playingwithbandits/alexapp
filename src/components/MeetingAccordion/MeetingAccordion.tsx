@@ -41,9 +41,6 @@ export const MeetingAccordion: React.FC<MeetingAccordionProps> = (props) => {
     setExpanded(isExpanded ? panel : "");
   };
 
-
-
-  console.log(props.data);
   return (
     <Box className={classes.root} width={['calc(100vw - 50px)','calc(100vw - 164px)']}>
 

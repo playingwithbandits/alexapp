@@ -71,12 +71,12 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   paper: {
-    width:"auto",
-    maxWidth:"100%"
+    width: "auto",
+    maxWidth: "100%"
   },
   table: {
-    width:"auto",
-    maxWidth:"100%"
+    width: "auto",
+    maxWidth: "100%"
   },
   visuallyHidden: {
     border: 0,
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1
   },
-  tablecell:{
+  tablecell: {
     padding: "0px 5px",
   }
 }));
@@ -105,17 +105,17 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
     <TableHead>
       <TableRow>
         {columns.map((headCell) => (
-          <TableCell
+          (headCell.displayCol === undefined || headCell.displayCol) ? (<TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             sortDirection={orderBy === headCell.id ? order : undefined}
             className={classes.tablecell}
-            style={{maxWidth: headCell.width ? headCell.width : "70px", width: headCell.width ? headCell.width : "70px"}}
+            style={{ maxWidth: headCell.width ? headCell.width : "70px", width: headCell.width ? headCell.width : "70px", background: headCell.contributingCol ? "#3f51b5" : undefined, color: headCell.contributingCol ? "#ffffff" : undefined }}
           >
-            <Box onClick={createSortHandler(headCell.id)} sx={{userSelect:"none", cursor:"pointer"}}>
+            <Box onClick={createSortHandler(headCell.id)} sx={{ userSelect: "none", cursor: "pointer" }}>
               <Text title={headCell.label} fontSize={"10px"} fontWeight="bold">{headCell.label}</Text>
             </Box>
-          </TableCell>
+          </TableCell>) : null
         ))}
       </TableRow>
     </TableHead>
@@ -125,10 +125,10 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = (props) => {
 
 export const RaceTable: React.FC<RaceTableProps> = (props) => {
   let rows = props.data;
-  
+
   const classes = useStyles();
-  const [order, setOrder] = useState<'asc' | 'desc'>("asc");
-  const [orderBy, setOrderBy] = useState("draw");
+  const [order, setOrder] = useState<'asc' | 'desc'>("desc");
+  const [orderBy, setOrderBy] = useState("score");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
@@ -196,16 +196,17 @@ export const RaceTable: React.FC<RaceTableProps> = (props) => {
                       tabIndex={-1}
                       key={row.name}
                     >
-                      {props.columns.map((col) => 
-                        <TableCell align={col.numeric ? 'right': 'left'} 
-                        className={classes.tablecell} style={{maxWidth: col.width ? col.width : "70px", width: col.width ? col.width : "70px"}}>
-                          <Flex sx={{whiteSpace: "nowrap",overflowX: "hidden"}}>
-                            {col.returnFunc ? 
+                      {props.columns.map((col) =>
+                        (col.displayCol === undefined || col.displayCol) ? (
+                          <TableCell align={col.numeric ? 'right' : 'left'}
+                            className={classes.tablecell} style={{ maxWidth: col.width ? col.width : "70px", width: col.width ? col.width : "70px", background: row[col.highlight] ? "#F1F8E9" : undefined }}>
+                            <Flex sx={{ whiteSpace: "nowrap", overflowX: "hidden" }}>
+                              {col.returnFunc ?
                                 col.returnFunc(row)
-                            : <Text title={row[col.id]} fontSize={14} width="100%">{row[col.id]}</Text>
-                            }
-                          </Flex>
-                        </TableCell>
+                                : <Text title={row[col.id]} fontSize={14} width="100%">{row[col.id]}</Text>
+                              }
+                            </Flex>
+                          </TableCell>) : null
                       )}
                     </TableRow>
                   );

@@ -164,7 +164,6 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
       
       props.setGlobalDisabledButton(false);
 
-      console.log("updater" + currentDate);
       let rp_picks_url = "https://www.racingpost.com/racecards/" + currentDate;
 
       let meeting_objects:dayplaces_insert_input[] = [];
@@ -790,9 +789,6 @@ export const DateUpdater: React.FC<DateUpdaterProps> = (props) => {
           }]
         });
       }
-      
-      console.log(trainer_divs_collection);
-      console.log(rider_divs_collection);
 
     } catch (err) {
       console.log(err);

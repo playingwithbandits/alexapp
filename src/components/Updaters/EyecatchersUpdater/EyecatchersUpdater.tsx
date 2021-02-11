@@ -37,7 +37,7 @@ export const EyecatchersUpdater: React.FC<EyecatchersUpdaterProps> = (props) => 
   const listOfDates =  GET_DAYS_BETWEEN_INC(yesterday, lastUpdate);
 
   const getDay = async (dateStr: string) => {
-    console.log(dateStr);
+    
     try {
       
           props.setGlobalDisabledButton(false);

@@ -173,7 +173,10 @@ export const distanceToWinnerStrToFloat = (code: string) => {
     return result;
 };
 
-// export const avgFromObj = (arr :any,key :any,amount :any) => {let tempAvg=0;for(let i=0;i<amount;i++){tempAvg=(arr.reduce(((s,c)=>(a: any,x: { [x: string]: string | number; })=>(x[key]!=null&&x[key]>=tempAvg)?(s+=+x[key])/++c:a)(0,0),0))}
+export const avgFromObj = (arr:any, key:any) => {
+    return arr.length ? p_F(p_F((arr.reduce( ( a:any, b:any ) => a + b[key], 0 )) / arr.length).toFixed(2)) : 0;
+}
+    
 // return tempAvg.toFixed(2)};
 export const isGoodDraw = (draw :any,max_draw :any,drawBias :any) => {let drawGood=!0;if(max_draw>5){let avg_draw=max_draw/2;let lower_bound_draw=avg_draw/2;let higher_bound_draw=avg_draw+(avg_draw/2);switch(drawBias){case "low":drawGood=(draw<=avg_draw);break;case "high":drawGood=(draw>=avg_draw);break;case "not-middle":drawGood=((draw<=lower_bound_draw)||(draw>=higher_bound_draw));break;case "not stall 1":drawGood=(draw!=1);break;case "not1&Low":drawGood=(draw<=avg_draw)&&(draw!=1);break}}
 return drawGood};
